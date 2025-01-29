@@ -10,3 +10,9 @@ install:
 
 validate:
 	composer validate
+
+test:
+	php artisan test
+
+test-coverage:
+	XDEBUG_MODE=coverage php artisan test --coverage-html build/logs/html
