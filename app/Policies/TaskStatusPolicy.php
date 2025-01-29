@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\TaskStatus;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 
 class TaskStatusPolicy
 {
@@ -21,8 +20,7 @@ class TaskStatusPolicy
      */
     public function create(User $user): bool
     {
-        // return true;
-        return Auth::check();
+        return true;
     }
 
     /**
@@ -30,7 +28,7 @@ class TaskStatusPolicy
      */
     public function update(User $user, TaskStatus $taskStatus): bool
     {
-        return Auth::check();
+        return true;
     }
 
     /**
@@ -38,6 +36,6 @@ class TaskStatusPolicy
      */
     public function delete(User $user, TaskStatus $taskStatus): bool
     {
-        return Auth::check();
+        return true;
     }
 }
