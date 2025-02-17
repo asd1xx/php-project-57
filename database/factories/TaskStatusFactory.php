@@ -5,7 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\TaskStatus>
  */
 class TaskStatusFactory extends Factory
 {
@@ -18,6 +18,8 @@ class TaskStatusFactory extends Factory
     {
         return [
             'name' => fake()->name(),
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
     }
 }
