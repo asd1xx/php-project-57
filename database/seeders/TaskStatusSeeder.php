@@ -19,7 +19,8 @@ class TaskStatusSeeder extends Seeder
             ['name' => 'завершен'],
         ];
 
-        TaskStatus::factory(count($seeders))
+        TaskStatus::factory()
+            ->count(count($seeders))
             ->sequence(...$seeders)
             ->create();
     }
