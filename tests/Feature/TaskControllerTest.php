@@ -2,12 +2,11 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use App\Models\User;
 use App\Models\Task;
 use App\Models\TaskStatus;
-use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class TaskControllerTest extends TestCase
 {
@@ -28,7 +27,7 @@ class TaskControllerTest extends TestCase
         $response->assertOk();
     }
 
-    public function testCreateFail(): void
+    public function testCreateForGuest(): void
     {
         $response = $this->get(route('tasks.create'));
         $response->assertForbidden();
@@ -48,7 +47,7 @@ class TaskControllerTest extends TestCase
         $response->assertSee($task->name);
     }
 
-    public function testEditFail(): void
+    public function testEditForGuest(): void
     {
         $task = Task::factory()->create();
         $response = $this->get(route('tasks.edit', $task));
@@ -63,7 +62,7 @@ class TaskControllerTest extends TestCase
         $response->assertSee($task->name);
     }
 
-    public function testStoreFail(): void
+    public function testStoreForGuest(): void
     {
         $data = Task::factory()->make()->only('name', 'status_id');
         $response = $this->post(route('tasks.store', $data));
@@ -80,7 +79,7 @@ class TaskControllerTest extends TestCase
         $this->assertDatabaseHas('tasks', $data);
     }
 
-    public function testUpdateFail(): void
+    public function testUpdateForGuest(): void
     {
         $task = Task::factory()->create();
         $data = Task::factory()->make()->only('name', 'status_id');
@@ -99,7 +98,7 @@ class TaskControllerTest extends TestCase
         $this->assertDatabaseHas('tasks', $data);
     }
 
-    public function testDeleteFail(): void
+    public function testDeleteForGuest(): void
     {
         $task = Task::factory()->create();
         $response = $this->delete(route('tasks.destroy', $task));
@@ -107,7 +106,7 @@ class TaskControllerTest extends TestCase
         $this->assertDatabaseHas('tasks', ['id' => $task->id]);
     }
 
-    public function testDeleteFailNotCreator(): void
+    public function testDeleteFail(): void
     {
         $task = Task::factory()->create();
         $anotherUser = User::factory()->create();

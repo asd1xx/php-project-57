@@ -2,10 +2,10 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use App\Models\TaskStatus;
 use App\Models\User;
+use App\Models\TaskStatus;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class TaskStatusControllerTest extends TestCase
 {
@@ -25,7 +25,7 @@ class TaskStatusControllerTest extends TestCase
         $response->assertOk();
     }
 
-    public function testCreateFail(): void
+    public function testCreateForGuest(): void
     {
         $response = $this->get(route('task_statuses.create'));
         $response->assertForbidden();
@@ -37,7 +37,7 @@ class TaskStatusControllerTest extends TestCase
         $response->assertOk();
     }
 
-    public function testEditFail(): void
+    public function testEditForGuest(): void
     {
         $taskStatus = TaskStatus::factory()->create();
         $response = $this->get(route('task_statuses.edit', $taskStatus));
@@ -51,7 +51,7 @@ class TaskStatusControllerTest extends TestCase
         $response->assertOk();
     }
 
-    public function testStoreFail(): void
+    public function testStoreForGuest(): void
     {
         $data = TaskStatus::factory()->make()->only('name');
         $response = $this->post(route('task_statuses.store', $data));
@@ -68,7 +68,7 @@ class TaskStatusControllerTest extends TestCase
         $this->assertDatabaseHas('task_statuses', $data);
     }
 
-    public function testUpdateFail(): void
+    public function testUpdateForGuest(): void
     {
         $taskStatus = TaskStatus::factory()->create();
         $data = TaskStatus::factory()->make()->only('name');
@@ -87,7 +87,7 @@ class TaskStatusControllerTest extends TestCase
         $this->assertDatabaseHas('task_statuses', $data);
     }
 
-    public function testDeleteFail(): void
+    public function testDeleteForGuest(): void
     {
         $taskStatus = TaskStatus::factory()->create();
         $response = $this->delete(route('task_statuses.destroy', $taskStatus));
@@ -95,7 +95,7 @@ class TaskStatusControllerTest extends TestCase
         $this->assertDatabaseHas('task_statuses', ['id' => $taskStatus->id]);
     }
 
-    public function testDeleteFailUsed(): void
+    public function testDeleteFail(): void
     {
         $taskStatus = TaskStatus::factory()->hasTasks(1)->create();
         $response = $this->actingAs($this->user)->delete(route('task_statuses.destroy', $taskStatus));
