@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->foreignIdFor(TaskStatus::class, 'status_id')->constrained('task_statuses');
             $table->foreignIdFor(User::class, 'created_by_id')->constrained('users');
-            $table->foreignIdFor(User::class, 'assigned_to_id')->constrained('users')->nullable();
+            $table->foreignIdFor(User::class, 'assigned_to_id')->nullable()->constrained('users');
             $table->timestamps();
         });
     }
