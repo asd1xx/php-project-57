@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreTaskRequest;
+use App\Models\Label;
 use App\Models\Task;
+use App\Models\TaskStatus;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
-    /**
-     * Create the controller instance.
-     */
     public function __construct()
     {
         $this->authorizeResource(Task::class);
@@ -18,37 +21,40 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $tasks = Task::all();
-
-        return view('task.index', compact('tasks'));
+        $filter = $request->input('filter');
+        $tasks = Task::filter()->orderBy('id')->paginate();
+        $taskStatusesById = TaskStatus::pluck('name', 'id');
+        $usersById = User::pluck('name', 'id');
+        return view('task.index', compact('tasks', 'taskStatusesById', 'usersById', 'filter'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Task $task)
+    public function create()
     {
-        return view('task.create', compact('task'));
+        $taskStatuses = TaskStatus::pluck('name', 'id');
+        $users = User::pluck('name', 'id');
+        $labels = Label::pluck('name', 'id');
+        return view('task.create', compact('taskStatuses', 'users', 'labels'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, Task $task)
+    public function store(StoreTaskRequest $request)
     {
-        $dataRequest = json_decode($request->getContent(), true);
-        $dataRequest = $request->validate([
-            'name' => 'required|unique:task_statuses'
-        ]);
-
-        $task->fill($dataRequest);
+        $data = $request->validated();
+        $task = Auth::user()->createdTasks()->make($data);
         $task->save();
+        $labels = Arr::whereNotNull($request->input('labels') ?? []);
+        $task->labels()->sync($labels);
 
-        return redirect()
-            ->route('tasks.index')
-            ->with('success', 'Задача успешно создана!');
+        flash(__('flash.tasks.store.success'))->success();
+
+        return redirect()->route('tasks.index');
     }
 
     /**
@@ -56,7 +62,7 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
-        return view('task.edit', compact('task'));
+        return view('task.show', compact('task'));
     }
 
     /**
@@ -64,27 +70,26 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        return view('task.edit', compact('task'));
+        $taskStatuses = TaskStatus::pluck('name', 'id');
+        $users = User::pluck('name', 'id');
+        $labels = Label::pluck('name', 'id');
+        return view('task.edit', compact('task', 'taskStatuses', 'users', 'labels'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Task $task)
+    public function update(StoreTaskRequest $request, Task $task)
     {
-        $dataRequest = $request->validate([
-            'name' => 'required|unique:task_statuses',
-            'description' => 'string|max:500|nullable',
-            'status_id' => 'required|exists:task_statuses,id',
-            'assigned_to_id' => 'nullable|exists:users,id',
-        ]);
-
-        $task->fill($dataRequest);
+        $data = $request->validated();
+        $task->fill($data);
         $task->save();
+        $labels = Arr::whereNotNull($request->input('labels') ?? []);
+        $task->labels()->sync($labels);
 
-        return redirect()
-            ->route('tasks.index')
-            ->with('success', 'Задача успешно обновлена!');
+        flash(__('flash.tasks.update.success'))->success();
+
+        return redirect()->route('tasks.index');
     }
 
     /**
@@ -92,6 +97,8 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        //
+        $task->delete();
+        flash(__('flash.tasks.delete.success'))->success();
+        return redirect()->route('tasks.index');
     }
 }
