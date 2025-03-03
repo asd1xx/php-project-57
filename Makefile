@@ -27,4 +27,4 @@ db:
 	php artisan migrate:fresh --seed
 
 frontend:
-	npm install && npm run build
+	npm ci && npm run build
