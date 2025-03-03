@@ -1,9 +1,7 @@
 FROM php:8.3-cli
 
-RUN apt-get update && apt-get install -y \
-    libpq-dev \
-    libzip-dev \
-RUN docker-php-ext-install pdo pdo_pgsql zip
+RUN apt-get update && apt-get install -y libzip-dev libpq-dev
+RUN docker-php-ext-install zip pdo pdo_pgsql
 
 
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
@@ -16,8 +14,9 @@ RUN apt-get install -y nodejs
 WORKDIR /app
 
 COPY . .
+
 RUN composer install
 RUN npm ci
 RUN npm run build
 
-CMD ["bash", "-c", "php artisan migrate:refresh --force --seed && php artisan serve --host=0.0.0.0 --port=$PORT"]
+CMD ["bash", "-c", "php artisan migrate:refresh --force --seed", "make start"]
