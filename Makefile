@@ -16,3 +16,15 @@ test:
 
 test-coverage:
 	XDEBUG_MODE=coverage php artisan test --coverage-html build/logs/html
+
+env:
+	cp -n .env.example .env
+
+key:
+	php artisan key:generate
+
+db:
+	php artisan migrate:fresh --seed
+
+frontend:
+	npm install && npm run build
