@@ -15,7 +15,7 @@ test:
 	php artisan test
 
 test-coverage:
-	XDEBUG_MODE=coverage php artisan test --coverage-clover build/logs/clover.xml
+	XDEBUG_MODE=coverage composer exec --verbose phpunit tests -- --coverage-clover build/logs/clover.xml
 
 test-coverage-html:
 	XDEBUG_MODE=coverage php artisan test --coverage-html build/logs/html
