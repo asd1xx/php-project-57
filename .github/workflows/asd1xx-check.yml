@@ -5,6 +5,17 @@ on: push
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+        ports:
+          - 5432:5432
+
     steps:
       - uses: actions/checkout@v4
 
@@ -13,11 +24,23 @@ jobs:
         with:
           php-version: '8.3'
 
+      - name: env
+        run: make env
+
       - name: composer
-        run: composer install
+        run: make install
+
+      - name: key
+        run: make key
+
+      - name: db
+        run: make db
+
+      - name: frontend
+        run: make frontend
 
       - name: validate
-        run: composer validate
+        run: make validate
 
       - name: linter
         run: make lint
