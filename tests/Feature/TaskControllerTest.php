@@ -6,14 +6,14 @@ use Tests\TestCase;
 use App\Models\User;
 use App\Models\Task;
 use App\Models\TaskStatus;
+use App\Models\Label;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class TaskControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected User $user;
-    protected Task $task;
+    private User $user;
 
     protected function setUp(): void
     {
@@ -45,7 +45,7 @@ class TaskControllerTest extends TestCase
         $task = Task::factory()->create();
         $response = $this->get(route('tasks.show', $task));
         $response->assertOk();
-        $response->assertSee($task->name);
+        $response->assertSee($task['name']);
     }
 
     public function testEditForGuest(): void
@@ -60,7 +60,7 @@ class TaskControllerTest extends TestCase
         $task = Task::factory()->create();
         $response = $this->actingAs($this->user)->get(route('tasks.edit', $task));
         $response->assertOk();
-        $response->assertSee($task->name);
+        $response->assertSee($task['name']);
     }
 
     public function testStoreForGuest(): void
@@ -104,7 +104,7 @@ class TaskControllerTest extends TestCase
         $task = Task::factory()->create();
         $response = $this->delete(route('tasks.destroy', $task));
         $response->assertForbidden();
-        $this->assertDatabaseHas('tasks', ['id' => $task->id]);
+        $this->assertDatabaseHas('tasks', ['id' => $task['id']]);
     }
 
     public function testDeleteFail(): void
@@ -113,7 +113,7 @@ class TaskControllerTest extends TestCase
         $anotherUser = User::factory()->create();
         $response = $this->actingAs($anotherUser)->delete(route('tasks.destroy', $task));
         $response->assertForbidden();
-        $this->assertDatabaseHas('tasks', ['id' => $task->id]);
+        $this->assertDatabaseHas('tasks', ['id' => $task['id']]);
     }
 
     public function testDelete(): void
@@ -122,6 +122,6 @@ class TaskControllerTest extends TestCase
         $response = $this->actingAs($this->user)->delete(route('tasks.destroy', $task));
         $response->assertSessionHasNoErrors();
         $response->assertRedirect();
-        $this->assertDatabaseMissing('tasks', ['id' => $task->id]);
+        $this->assertDatabaseMissing('tasks', ['id' => $task['id']]);
     }
 }

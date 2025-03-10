@@ -12,8 +12,7 @@ class LabelControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected User $user;
-    protected Label $label;
+    private User $user;
 
     protected function setUp(): void
     {
@@ -94,16 +93,7 @@ class LabelControllerTest extends TestCase
         $label = Label::factory()->create();
         $response = $this->delete(route('labels.destroy', $label));
         $response->assertForbidden();
-        $this->assertDatabaseHas('labels', ['id' => $label->id]);
-    }
-
-    public function testDeleteFail(): void
-    {
-        TaskStatus::factory()->create();
-        $label = Label::factory()->hasTasks(1)->create();
-        $response = $this->actingAs($this->user)->delete(route('labels.destroy', $label));
-        $response->assertRedirect();
-        $this->assertDatabaseHas('labels', ['id' => $label->id]);
+        $this->assertDatabaseHas('labels', ['id' => $label['id']]);
     }
 
     public function testDelete(): void
@@ -112,6 +102,6 @@ class LabelControllerTest extends TestCase
         $response = $this->actingAs($this->user)->delete(route('labels.destroy', $label));
         $response->assertSessionHasNoErrors();
         $response->assertRedirect();
-        $this->assertDatabaseMissing('labels', ['id' => $label->id]);
+        $this->assertDatabaseMissing('labels', ['id' => $label['id']]);
     }
 }

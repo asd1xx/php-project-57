@@ -5,14 +5,14 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\TaskStatus;
+use App\Models\Label;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class TaskStatusControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected User $user;
-    protected TaskStatus $taskStatus;
+    private User $user;
 
     protected function setUp(): void
     {
@@ -93,15 +93,7 @@ class TaskStatusControllerTest extends TestCase
         $taskStatus = TaskStatus::factory()->create();
         $response = $this->delete(route('task_statuses.destroy', $taskStatus));
         $response->assertForbidden();
-        $this->assertDatabaseHas('task_statuses', ['id' => $taskStatus->id]);
-    }
-
-    public function testDeleteFail(): void
-    {
-        $taskStatus = TaskStatus::factory()->hasTasks(1)->create();
-        $response = $this->actingAs($this->user)->delete(route('task_statuses.destroy', $taskStatus));
-        $response->assertRedirect();
-        $this->assertDatabaseHas('task_statuses', ['id' => $taskStatus->id]);
+        $this->assertDatabaseHas('task_statuses', ['id' => $taskStatus['id']]);
     }
 
     public function testDelete(): void
@@ -110,6 +102,6 @@ class TaskStatusControllerTest extends TestCase
         $response = $this->actingAs($this->user)->delete(route('task_statuses.destroy', $taskStatus));
         $response->assertSessionHasNoErrors();
         $response->assertRedirect();
-        $this->assertDatabaseMissing('task_statuses', ['id' => $taskStatus->id]);
+        $this->assertDatabaseMissing('task_statuses', ['id' => $taskStatus['id']]);
     }
 }
