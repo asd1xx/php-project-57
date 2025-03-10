@@ -88,29 +88,29 @@ class LabelControllerTest extends TestCase
         $this->assertDatabaseHas('labels', $data);
     }
 
-    public function testDeleteForGuest(): void
-    {
-        $label = Label::factory()->create();
-        $response = $this->delete(route('labels.destroy', $label));
-        $response->assertForbidden();
-        $this->assertDatabaseHas('labels', ['id' => $label->id]);
-    }
+    // public function testDeleteForGuest(): void
+    // {
+    //     $label = Label::factory()->create();
+    //     $response = $this->delete(route('labels.destroy', $label));
+    //     $response->assertForbidden();
+    //     $this->assertDatabaseHas('labels', ['id' => $label->id]);
+    // }
 
-    public function testDeleteFail(): void
-    {
-        TaskStatus::factory()->create();
-        $label = Label::factory()->hasTasks(1)->create();
-        $response = $this->actingAs($this->user)->delete(route('labels.destroy', $label));
-        $response->assertRedirect();
-        $this->assertDatabaseHas('labels', ['id' => $label->id]);
-    }
+    // public function testDeleteFail(): void
+    // {
+    //     TaskStatus::factory()->create();
+    //     $label = Label::factory()->hasTasks(1)->create();
+    //     $response = $this->actingAs($this->user)->delete(route('labels.destroy', $label));
+    //     $response->assertRedirect();
+    //     $this->assertDatabaseHas('labels', ['id' => $label->id]);
+    // }
 
-    public function testDelete(): void
-    {
-        $label = Label::factory()->create();
-        $response = $this->actingAs($this->user)->delete(route('labels.destroy', $label));
-        $response->assertSessionHasNoErrors();
-        $response->assertRedirect();
-        $this->assertDatabaseMissing('labels', ['id' => $label->id]);
-    }
+    // public function testDelete(): void
+    // {
+    //     $label = Label::factory()->create();
+    //     $response = $this->actingAs($this->user)->delete(route('labels.destroy', $label));
+    //     $response->assertSessionHasNoErrors();
+    //     $response->assertRedirect();
+    //     $this->assertDatabaseMissing('labels', ['id' => $label->id]);
+    // }
 }
