@@ -16,7 +16,7 @@ It allows you to set tasks, assign performers and change their statuses. To work
 - Composer 2.6.6
 - PHP 8.3
 - Laravel 10.10
-- PostgreSQL 12.22
+- PostgreSQL 16
 
 ## Installation instructions
 
