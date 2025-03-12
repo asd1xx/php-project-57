@@ -24,12 +24,11 @@
                 {{ html()->form()->close() }}
             </div>
 
-            @auth
+            @can('create', App\Models\Task::class)
                 <div class="ml-auto">
-                    <x-link-button route="{{ route('tasks.create') }}" text="{{ __('views.task.index.create_task') }}"
-                        class="ml-2" />
+                    <x-link-button route="{{ route('tasks.create') }}" text="{{ __('views.task.index.create_task') }}" class="ml-2" />
                 </div>
-            @endauth
+            @endcan
         </div>
 
         <table class="mt-4">
@@ -41,9 +40,9 @@
                     <th>{{ __('views.task.index.created_by') }}</th>
                     <th>{{ __('views.task.index.assigned_to') }}</th>
                     <th>{{ __('views.task.index.created_at') }}</th>
-                    @auth
+                    @can('viewActions', App\Models\Task::class)
                         <th>{{ __('views.task.index.actions') }}</th>
-                    @endauth
+                    @endcan
                 </tr>
             </thead>
             <tbody>
@@ -57,17 +56,17 @@
                         <td>{{ $task->createdBy->name }}</td>
                         <td>{{ optional($task->assignedTo)->name }}</td>
                         <td>{{ $task->created_at->format('d.m.Y') }}</td>
-                        @auth
-                            <td>
-                                @can('delete', $task)
-                                    <x-link-red route="{{ route('tasks.destroy', $task->id) }}"
-                                        confirm="{{ __('views.actions.delete_confirm') }}"
-                                        text="{{ __('views.actions.delete') }}" />
-                                @endcan
+                        <td>
+                            @can('delete', $task)
+                                <x-link-red route="{{ route('tasks.destroy', $task->id) }}"
+                                    confirm="{{ __('views.actions.delete_confirm') }}"
+                                    text="{{ __('views.actions.delete') }}" />
+                            @endcan
+                            @can('update', $task)
                                 <x-link-blue route="{{ route('tasks.edit', $task->id) }}"
                                     text="{{ __('views.actions.edit') }}" />
-                            </td>
-                        @endauth
+                            @endcan
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
