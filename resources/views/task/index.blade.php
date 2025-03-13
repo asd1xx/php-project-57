@@ -12,10 +12,10 @@
                             {{ html()->select('filter[status_id]', $taskStatusesById, Arr::get($filter, 'status_id'))->class('rounded border-gray-300')->placeholder(__('views.task.index.status')) }}
                         </div>
                         <div>
-                            {{ html()->select('filter[created_by_id]', $usersById)->class('rounded border-gray-300')->placeholder(__('views.task.index.created_by')) }}
+                            {{ html()->select('filter[created_by_id]', $usersById, Arr::get($filter, 'created_by_id'))->class('rounded border-gray-300')->placeholder(__('views.task.index.created_by')) }}
                         </div>
                         <div>
-                            {{ html()->select('filter[assigned_to_id]', $usersById)->class('rounded border-gray-300')->placeholder(__('views.task.index.assigned_to')) }}
+                            {{ html()->select('filter[assigned_to_id]', $usersById, Arr::get($filter, 'assigned_to_id'))->class('rounded border-gray-300')->placeholder(__('views.task.index.assigned_to')) }}
                         </div>
                         <div>
                             {{ html()->submit(__('views.task.index.apply'))->class('bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2') }}
