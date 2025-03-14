@@ -40,9 +40,9 @@
                     <th>{{ __('views.task.index.created_by') }}</th>
                     <th>{{ __('views.task.index.assigned_to') }}</th>
                     <th>{{ __('views.task.index.created_at') }}</th>
-                    @can('viewActions', App\Models\Task::class)
+                    @auth
                         <th>{{ __('views.task.index.actions') }}</th>
-                    @endcan
+                    @endauth
                 </tr>
             </thead>
             <tbody>

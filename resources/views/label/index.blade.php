@@ -15,9 +15,9 @@
                     <th>{{ __('views.label.index.name') }}</th>
                     <th>{{ __('views.label.index.description') }}</th>
                     <th>{{ __('views.label.index.created_at') }}</th>
-                    @can('viewActions', App\Models\Label::class)
+                    @auth
                         <th>{{ __('views.label.index.actions') }}</th>
-                    @endcan
+                    @endauth
                 </tr>
             </thead>
             <tbody>

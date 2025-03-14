@@ -14,9 +14,9 @@
                     <th>{{ __('views.task_status.index.id') }}</th>
                     <th>{{ __('views.task_status.index.name') }}</th>
                     <th>{{ __('views.task_status.index.created_at') }}</th>
-                    @can('viewActions', App\Models\TaskStatus::class)
+                    @auth
                         <th>{{ __('views.task_status.index.actions') }}</th>
-                    @endcan
+                    @endauth
                 </tr>
             </thead>
             <tbody>
