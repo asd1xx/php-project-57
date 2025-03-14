@@ -39,12 +39,4 @@ class LabelPolicy
     {
         return Auth::check();
     }
-
-    /**
-     * Determine whether the user can view actions.
-     */
-    public function viewActions()
-    {
-        return Auth::check();
-    }
 }

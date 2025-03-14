@@ -47,12 +47,4 @@ class TaskPolicy
     {
         return $task->createdBy()->is($user);
     }
-
-    /**
-     * Determine whether the user can view actions.
-     */
-    public function viewActions()
-    {
-        return Auth::check();
-    }
 }
